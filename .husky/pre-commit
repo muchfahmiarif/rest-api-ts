@@ -1,0 +1,33 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '🚀 Running pre-commit hook'
+
+# Check Prettier
+npm run check-format ||
+(
+  echo '❌ Prettier check failed. Run npm run format, add change and try again.'
+  exit 1
+)
+
+# Check ESLint
+npm run check-lint ||
+(
+  echo '❌ ESLint check failed. Make the required changes listed above, add them and try to commit again.'
+  exit 1
+)
+
+# Check tsconfig
+npm run check-types ||
+(
+  echo '❌ tsconfig check failed. Make the changes require above, add them and try to commit again.'
+  exit 1
+)
+
+npm run build ||
+(
+  echo '❌ Build failed. View the errors above.'
+  exit 1
+)
+
+echo '✅ All checks passed. Ready to commit.'
