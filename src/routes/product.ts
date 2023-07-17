@@ -22,3 +22,14 @@ ProductRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
     ]
   })
 })
+
+// post untuk menambah data
+ProductRouter.post('/', (req: Request, res: Response, next: NextFunction) => {
+  logger.info('Success add product data')
+  res.status(200).send({
+    status: true,
+    statusCode: 200,
+    message: 'Success',
+    data: req.body
+  })
+})
