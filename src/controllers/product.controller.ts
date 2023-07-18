@@ -23,20 +23,41 @@ export const createProduct = (req: Request, res: Response, next: NextFunction) =
 }
 
 export const getProduct = (req: Request, res: Response, next: NextFunction) => {
-  logger.info('Success get product data')
+  const product = [
+    {
+      name: 'Kopi',
+      price: 10000
+    },
+    {
+      name: 'Teh',
+      price: 5000
+    }
+  ]
+
+  const {
+    params: { name }
+  } = req
+
+  if (name !== '') {
+    const productFilter = product.filter((item) => {
+      if (item.name === name) {
+        return item
+      }
+    })
+    logger.info('Success get product data')
+    res.status(200).send({
+      status: true,
+      statusCode: 200,
+      message: 'Success',
+      data: productFilter
+    })
+  }
+
+  logger.info('Success get all product data')
   res.status(200).send({
     status: true,
     statusCode: 200,
     message: 'Success',
-    data: [
-      {
-        name: 'Kopi',
-        price: 10000
-      },
-      {
-        name: 'Teh',
-        price: 5000
-      }
-    ]
+    data: product
   })
 }
