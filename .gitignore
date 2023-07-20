@@ -11,3 +11,7 @@
 #misc
 DS_store
 .packages-lock.json
+
+#enviroment variables
+.env
+.env.local
