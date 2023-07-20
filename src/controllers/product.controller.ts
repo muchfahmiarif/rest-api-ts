@@ -24,8 +24,16 @@ export const createProduct = (req: Request, res: Response, next: NextFunction) =
 }
 
 export const getProduct = async (req: Request, res: Response, next: NextFunction) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const product = await getProductFromDB()
+
+  logger.info('Success get all product data')
+  res.status(200).send({
+    status: true,
+    statusCode: 200,
+    message: 'Success',
+    data: product
+  })
+
   // const {
   //   params: { name }
   // } = req
@@ -44,12 +52,4 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
   //     data: productFilter
   //   })
   // }
-
-  // logger.info('Success get all product data')
-  // res.status(200).send({
-  //   status: true,
-  //   statusCode: 200,
-  //   message: 'Success',
-  //   data: product
-  // })
 }

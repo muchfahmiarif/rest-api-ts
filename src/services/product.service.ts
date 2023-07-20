@@ -1,12 +1,14 @@
+import { logger } from '../utils/logger'
 import productModel from '../models/product.model'
 
 export const getProductFromDB = async () => {
-  productModel
+  return await productModel
     .find()
     .then((data) => {
-      console.log(data)
+      return data
     })
     .catch((error) => {
-      console.log(error)
+      logger.info('Error get product data', error)
+      logger.error(error)
     })
 }
