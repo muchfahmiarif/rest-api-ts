@@ -1,6 +1,7 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { logger } from '../utils/logger'
 import { createProductValidation } from '../validations/product.validation'
+import { getProductFromDB } from '../services/product.service'
 
 export const createProduct = (req: Request, res: Response, next: NextFunction) => {
   const { error, value } = createProductValidation(req.body)
@@ -22,42 +23,33 @@ export const createProduct = (req: Request, res: Response, next: NextFunction) =
   })
 }
 
-export const getProduct = (req: Request, res: Response, next: NextFunction) => {
-  const product = [
-    {
-      name: 'Kopi',
-      price: 10000
-    },
-    {
-      name: 'Teh',
-      price: 5000
-    }
-  ]
+export const getProduct = async (req: Request, res: Response, next: NextFunction) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const product = await getProductFromDB()
+  // const {
+  //   params: { name }
+  // } = req
 
-  const {
-    params: { name }
-  } = req
+  // if (name !== '') {
+  //   const productFilter = product.filter((item) => {
+  //     if (item.name === name) {
+  //       return item
+  //     }
+  //   })
+  //   logger.info('Success get product data')
+  //   res.status(200).send({
+  //     status: true,
+  //     statusCode: 200,
+  //     message: 'Success',
+  //     data: productFilter
+  //   })
+  // }
 
-  if (name !== '') {
-    const productFilter = product.filter((item) => {
-      if (item.name === name) {
-        return item
-      }
-    })
-    logger.info('Success get product data')
-    res.status(200).send({
-      status: true,
-      statusCode: 200,
-      message: 'Success',
-      data: productFilter
-    })
-  }
-
-  logger.info('Success get all product data')
-  res.status(200).send({
-    status: true,
-    statusCode: 200,
-    message: 'Success',
-    data: product
-  })
+  // logger.info('Success get all product data')
+  // res.status(200).send({
+  //   status: true,
+  //   statusCode: 200,
+  //   message: 'Success',
+  //   data: product
+  // })
 }

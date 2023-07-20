@@ -16,6 +16,7 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "no-return-assign": "off",
     "array-callback-return": "off",
-    "@typescript-eslint/restrict-template-expressions": "off"
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-confusing-void-expression": "off"
   }
 }
