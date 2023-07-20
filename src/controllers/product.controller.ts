@@ -3,6 +3,13 @@ import { logger } from '../utils/logger'
 import { createProductValidation } from '../validations/product.validation'
 import { getProductFromDB } from '../services/product.service'
 
+interface ProductType {
+  product_id: string
+  name: string
+  price: number
+  description: string
+}
+
 export const createProduct = (req: Request, res: Response, next: NextFunction) => {
   const { error, value } = createProductValidation(req.body)
   if (error != null) {
@@ -24,7 +31,26 @@ export const createProduct = (req: Request, res: Response, next: NextFunction) =
 }
 
 export const getProduct = async (req: Request, res: Response, next: NextFunction) => {
-  const product = await getProductFromDB()
+  const product: any = await getProductFromDB()
+
+  const {
+    params: { name }
+  } = req
+
+  if (name !== '') {
+    const productFilter = product.filter((item: ProductType) => {
+      if (item.name === name) {
+        return item
+      }
+    })
+    logger.info('Success get product data')
+    res.status(200).send({
+      status: true,
+      statusCode: 200,
+      message: 'Success',
+      data: productFilter
+    })
+  }
 
   logger.info('Success get all product data')
   res.status(200).send({
@@ -33,23 +59,4 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
     message: 'Success',
     data: product
   })
-
-  // const {
-  //   params: { name }
-  // } = req
-
-  // if (name !== '') {
-  //   const productFilter = product.filter((item) => {
-  //     if (item.name === name) {
-  //       return item
-  //     }
-  //   })
-  //   logger.info('Success get product data')
-  //   res.status(200).send({
-  //     status: true,
-  //     statusCode: 200,
-  //     message: 'Success',
-  //     data: productFilter
-  //   })
-  // }
 }
