@@ -2,15 +2,11 @@ import { type Request, type Response, type NextFunction } from 'express'
 import { logger } from '../utils/logger'
 import { createProductValidation } from '../validations/product.validation'
 import { getProductFromDB } from '../services/product.service'
-
-interface ProductType {
-  product_id: string
-  name: string
-  price: number
-  description: string
-}
+import { v4 as uuidv4 } from 'uuid'
+import { type ProductType } from '../types/product.type'
 
 export const createProduct = (req: Request, res: Response, next: NextFunction) => {
+  req.body.product_id = uuidv4()
   const { error, value } = createProductValidation(req.body)
   if (error != null) {
     logger.error('Error add product data', error.details[0].message)
