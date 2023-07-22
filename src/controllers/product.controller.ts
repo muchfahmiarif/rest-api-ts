@@ -1,7 +1,8 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { logger } from '../utils/logger'
-import { createProductValidation } from '../validations/product.validation'
-import { createProductToDB, getProductByIdFromDB, getProductFromDB } from '../services/product.service'
+import { createProductValidation, updateProductValidation } from '../validations/product.validation'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createProductToDB, getProductByIdFromDB, getProductFromDB, updateProductByIdFromDB } from '../services/product.service'
 import { v4 as uuidv4 } from 'uuid'
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
@@ -73,4 +74,34 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
       data: product
     })
   }
+}
+
+export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+  const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    params: { id }
+  } = req
+
+  const { error, value } = updateProductValidation(req.body)
+  if (error != null) {
+    logger.error('Error add product data', error.details[0].message)
+    return res.status(422).send({
+      status: false,
+      statusCode: 422,
+      message: error.details[0].message,
+      data: null
+    })
+  }
+
+  try {
+    console.log(value)
+    // await updateProductByIdFromDB(id, value)
+    logger.info('Success update product data')
+    return res.status(201).send({
+      status: true,
+      statusCode: 201,
+      message: 'Update Data Success',
+      data: value // value = req.body, tetapi value hasil validasi dari updateProductValidation
+    })
+  } catch (error) {}
 }
