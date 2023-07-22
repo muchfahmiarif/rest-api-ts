@@ -101,14 +101,24 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
 
   try {
     // console.log(value)
-    await updateProductByIdFromDB(id, value)
-    logger.info('Success update product data')
-    return res.status(201).send({
-      status: true,
-      statusCode: 201,
-      message: 'Update Data Success',
-      data: value // value = req.body, tetapi value hasil validasi dari updateProductValidation
-    })
+    const _result = await updateProductByIdFromDB(id, value)
+    if (!_result) {
+      logger.error('Error update product data', 'Product Not Found')
+      return res.status(404).send({
+        status: false,
+        statusCode: 404,
+        message: 'Product Not Found',
+        data: null
+      })
+    } else {
+      logger.info('Success update product data')
+      return res.status(201).send({
+        status: true,
+        statusCode: 201,
+        message: 'Update Data Success',
+        data: value // value = req.body, tetapi value hasil validasi dari updateProductValidation
+      })
+    }
   } catch (error) {
     logger.error('Error update product data', error)
     return res.status(500).send({
@@ -126,8 +136,8 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
   } = req
 
   try {
-    const result = await deleteProductByIdFromDB(id)
-    if (!result) {
+    const _result = await deleteProductByIdFromDB(id)
+    if (!_result) {
       logger.error('Error delete product data', 'Product Not Found')
       return res.status(404).send({
         status: false,
