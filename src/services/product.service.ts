@@ -17,3 +17,15 @@ export const getProductFromDB = async () => {
 export const createProductToDB = async (payload: ProductType) => {
   return await productModel.create(payload) // model from mongoose
 }
+
+export const getProductByIdFromDB = async (id: string) => {
+  return await productModel
+    .findOne({ product_id: id })
+    .then((data) => {
+      return data
+    })
+    .catch((error) => {
+      logger.info('Error get product data', error)
+      logger.error(error)
+    })
+}

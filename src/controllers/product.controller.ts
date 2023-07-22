@@ -1,9 +1,8 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { logger } from '../utils/logger'
 import { createProductValidation } from '../validations/product.validation'
-import { createProductToDB, getProductFromDB } from '../services/product.service'
+import { createProductToDB, getProductByIdFromDB, getProductFromDB } from '../services/product.service'
 import { v4 as uuidv4 } from 'uuid'
-import { type ProductType } from '../types/product.type'
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   req.body.product_id = uuidv4()
@@ -39,32 +38,27 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 }
 
 export const getProduct = async (req: Request, res: Response, next: NextFunction) => {
-  const product: any = await getProductFromDB()
-
   const {
-    params: { name }
+    params: { id }
   } = req
 
-  if (name !== '') {
-    const productFilter = product.filter((item: ProductType) => {
-      if (item.name === name) {
-        return item
-      }
-    })
-    logger.info('Success get product data')
+  if (id) {
+    const product: any = await getProductByIdFromDB(id)
+    logger.info('Success get detail product data')
     res.status(200).send({
       status: true,
       statusCode: 200,
       message: 'Success',
-      data: productFilter
+      data: product
+    })
+  } else {
+    const product: any = await getProductFromDB()
+    logger.info('Success get all product data')
+    res.status(200).send({
+      status: true,
+      statusCode: 200,
+      message: 'Success',
+      data: product
     })
   }
-
-  logger.info('Success get all product data')
-  res.status(200).send({
-    status: true,
-    statusCode: 200,
-    message: 'Success',
-    data: product
-  })
 }

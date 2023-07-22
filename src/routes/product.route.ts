@@ -5,7 +5,7 @@ export const ProductRouter: Router = Router()
 
 // get untuk mengambil data
 ProductRouter.get('/', getProduct)
-ProductRouter.get('/:name', getProduct)
+ProductRouter.get('/:id', getProduct)
 
 // post untuk menambah data
 ProductRouter.post('/', createProduct)
