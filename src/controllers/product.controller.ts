@@ -44,17 +44,29 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
 
   if (id) {
     const product: any = await getProductByIdFromDB(id)
-    logger.info('Success get detail product data')
-    res.status(200).send({
-      status: true,
-      statusCode: 200,
-      message: 'Success',
-      data: product
-    })
+    if (product) {
+      // if product found
+      logger.info('Success get detail product data')
+      return res.status(200).send({
+        status: true,
+        statusCode: 200,
+        message: 'Success',
+        data: product
+      })
+    } else {
+      // if product not found
+      logger.error('Error get detail product data', 'Product Not Found')
+      return res.status(404).send({
+        status: false,
+        statusCode: 404,
+        message: 'Product Not Found',
+        data: null
+      })
+    }
   } else {
     const product: any = await getProductFromDB()
     logger.info('Success get all product data')
-    res.status(200).send({
+    return res.status(200).send({
       status: true,
       statusCode: 200,
       message: 'Success',
