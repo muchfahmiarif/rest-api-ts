@@ -94,8 +94,8 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
   }
 
   try {
-    console.log(value)
-    // await updateProductByIdFromDB(id, value)
+    // console.log(value)
+    await updateProductByIdFromDB(id, value)
     logger.info('Success update product data')
     return res.status(201).send({
       status: true,
