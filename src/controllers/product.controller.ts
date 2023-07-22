@@ -126,13 +126,22 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
   } = req
 
   try {
-    await deleteProductByIdFromDB(id)
-    logger.info('Success delete product data')
-    return res.status(201).send({
-      status: true,
-      statusCode: 201,
-      message: 'Delete Data Success'
-    })
+    const result = await deleteProductByIdFromDB(id)
+    if (!result) {
+      logger.error('Error delete product data', 'Product Not Found')
+      return res.status(404).send({
+        status: false,
+        statusCode: 404,
+        message: 'Product Not Found'
+      })
+    } else {
+      logger.info('Success delete product data')
+      return res.status(201).send({
+        status: true,
+        statusCode: 201,
+        message: 'Delete Data Success'
+      })
+    }
   } catch (error) {
     logger.error('Error delete product data', error)
     return res.status(500).send({
