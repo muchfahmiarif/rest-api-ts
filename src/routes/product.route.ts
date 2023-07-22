@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createProduct, getProduct, updateProduct } from '../controllers/product.controller'
+import { createProduct, deleteProduct, getProduct, updateProduct } from '../controllers/product.controller'
 
 export const ProductRouter: Router = Router()
 
@@ -12,3 +12,6 @@ ProductRouter.post('/', createProduct)
 
 // put untuk mengubah data
 ProductRouter.put('/:id', updateProduct)
+
+// delete untuk menghapus data
+ProductRouter.delete('/:id', deleteProduct)

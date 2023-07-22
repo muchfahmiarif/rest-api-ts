@@ -41,3 +41,15 @@ export const updateProductByIdFromDB = async (id: string, payload: ProductType) 
       logger.error(error)
     })
 }
+
+export const deleteProductByIdFromDB = async (id: string) => {
+  return await productModel
+    .findOneAndDelete({ product_id: id }) // methode findOneAndDelete() from mongoose
+    .then((data) => {
+      return data
+    })
+    .catch((error) => {
+      logger.info('Error get product data', error)
+      logger.error(error)
+    })
+}

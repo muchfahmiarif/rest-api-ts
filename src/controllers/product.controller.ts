@@ -2,7 +2,13 @@ import { type Request, type Response, type NextFunction } from 'express'
 import { logger } from '../utils/logger'
 import { createProductValidation, updateProductValidation } from '../validations/product.validation'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createProductToDB, getProductByIdFromDB, getProductFromDB, updateProductByIdFromDB } from '../services/product.service'
+import {
+  createProductToDB,
+  deleteProductByIdFromDB,
+  getProductByIdFromDB,
+  getProductFromDB,
+  updateProductByIdFromDB
+} from '../services/product.service'
 import { v4 as uuidv4 } from 'uuid'
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
@@ -103,5 +109,37 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
       message: 'Update Data Success',
       data: value // value = req.body, tetapi value hasil validasi dari updateProductValidation
     })
-  } catch (error) {}
+  } catch (error) {
+    logger.error('Error update product data', error)
+    return res.status(500).send({
+      status: false,
+      statusCode: 500,
+      message: 'Internal Server Error',
+      data: null
+    })
+  }
+}
+
+export const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+  const {
+    params: { id }
+  } = req
+
+  try {
+    await deleteProductByIdFromDB(id)
+    logger.info('Success delete product data')
+    return res.status(201).send({
+      status: true,
+      statusCode: 201,
+      message: 'Delete Data Success'
+    })
+  } catch (error) {
+    logger.error('Error delete product data', error)
+    return res.status(500).send({
+      status: false,
+      statusCode: 500,
+      message: 'Internal Server Error',
+      data: null
+    })
+  }
 }
