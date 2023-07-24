@@ -1,8 +1,8 @@
 export interface IUser {
   user_id: string
-  name?: string
+  name: string
   email: string
-  password?: string
+  password: string
   role: string
-  status?: string
+  status: string
 }
