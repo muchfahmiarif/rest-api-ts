@@ -8,7 +8,7 @@ const userSchema = new Schema<IUser>(
     email: { type: String, unique: true },
     password: { type: String, default: '' },
     role: { type: String, default: 'user' },
-    status: { type: String }
+    status: { type: String, default: 'active' }
   },
   { timestamps: true }
 )
