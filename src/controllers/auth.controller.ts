@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { logger } from '../utils/logger'
 import { comparePassword, hashPassword } from '../utils/hashing'
 import { createUserToDB, findUserByEmailFromDB } from '../services/auth.service'
-import { type IUser } from '../types/user.type'
+import { signJWT } from '../utils/jwt'
 
 export const createUser = async (req: Request, res: Response) => {
   req.body.user_id = uuidv4()
@@ -18,6 +18,7 @@ export const createUser = async (req: Request, res: Response) => {
       data: null
     })
   }
+  logger.info('Success add user data', value)
 
   try {
     value.password = await hashPassword(value.password)
@@ -42,7 +43,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const createSession = async (req: Request, res: Response) => {
   const { error, value } = createSessionValidation(req.body)
-  if (error != null) {
+  if (error) {
     logger.error('Error create session', error.details[0].message)
     return res.status(422).send({
       status: false,
@@ -52,9 +53,11 @@ export const createSession = async (req: Request, res: Response) => {
     })
   }
 
+  // logger.info('Success create session', value)
+
   try {
-    const user: IUser | null = await findUserByEmailFromDB(value.email)
-    const isValid = await comparePassword(value.password, user!.password)
+    const user: any = await findUserByEmailFromDB(value.email)
+    const isValid = comparePassword(value.password, user.password)
     if (!isValid) {
       return res.status(401).json({
         status: false,
@@ -63,11 +66,21 @@ export const createSession = async (req: Request, res: Response) => {
         data: null
       })
     }
+    // generate access token
+    const accessToken = signJWT({ ...user }, { expiresIn: '1d' })
+    return res.status(200).json({
+      status: true,
+      statusCode: 200,
+      message: 'Success create session',
+      data: {
+        accessToken
+      }
+    })
   } catch (error) {
     logger.error('Error create session', error)
-    return res.status(500).json({
+    return res.status(422).json({
       status: false,
-      statusCode: 500,
+      statusCode: 422,
       message: 'Internal Server Error',
       data: null
     })
